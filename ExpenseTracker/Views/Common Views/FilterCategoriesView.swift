@@ -13,18 +13,19 @@ struct FilterCategoriesView: View {
     @Binding var selectedCategories: Set<Category>
     private let categories = Category.allCases
     
+    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 16) {
+            HStack(spacing: 15) {
                 ForEach(categories) { category in
                     FilterButtonView(
                         category: category,
                         isSelected: self.selectedCategories.contains(category),
                         onTap: self.onTap
                     )
-                        
-                        .padding(.leading, category == self.categories.first ? 16 : 0)
-                        .padding(.trailing, category == self.categories.last ? 16 : 0)
+                    
+                    .padding(.leading, category == self.categories.first ? 16 : 0)
+                    .padding(.trailing, category == self.categories.last ? 16 : 0)
                     
                 }
             }
@@ -48,26 +49,41 @@ struct FilterButtonView: View {
     var onTap: (Category) -> ()
     
     var body: some View {
+        
         Button(action: {
             self.onTap(self.category)
         }) {
+            
+            
             HStack(spacing: 8) {
-                Text(category.rawValue.capitalized)
-                    .fixedSize(horizontal: true, vertical: true)
                 
-                if isSelected {
-                    Image(systemName: "xmark.circle.fill")
+                ZStack {
+                    
+                    HStack {
+                        Text(category.rawValue.capitalized)
+                            .fixedSize(horizontal: true, vertical: true)
+                        
+                        if isSelected {
+                            Image(systemName: category.systemNameIcon)
+                                
+                        }
+                    }
                 }
             }
             .padding(.vertical, 8)
             .padding(.horizontal, 16)
-                
-            .overlay(
+            
+            .overlay {
+                // Foreground ring
                 RoundedRectangle(cornerRadius: 16)
-                    .stroke(isSelected ? category.color : Color(UIColor.lightGray), lineWidth: 1))
-                .frame(height: 44)
+                    .stroke(isSelected ? category.color : Color(UIColor.gray),
+                            style: StrokeStyle(lineWidth: 2, lineCap: .round))
+                    .frame(height: 35)
+            }
+            
         }
         .foregroundColor(isSelected ? category.color : Color(UIColor.gray))
+        
     }
     
     

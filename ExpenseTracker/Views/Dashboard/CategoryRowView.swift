@@ -13,11 +13,21 @@ struct CategoryRowView: View {
     let sum: Double
     
     var body: some View {
-        HStack {
-            CategoryImageView(category: category)
-            Text(category.rawValue.capitalized)
-            Spacer()
-            Text(sum.formattedCurrencyText).font(.headline)
+        
+        NavigationStack {
+            HStack {
+                
+                CategoryImageView(category: category)
+                
+                Text(category.rawValue.capitalized)
+                Spacer()
+                
+                NavigationLink("\(Text(sum.formattedCurrencyText).font(.headline))") {
+                    
+                    LogsTabView(selectedCategories: Set(arrayLiteral: category))
+                }
+            }
+            
         }
     }
 }

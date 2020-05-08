@@ -18,43 +18,56 @@ struct DashboardTabView: View {
     @State var categoriesSum: [CategorySum]?
     
     var body: some View {
-        VStack(spacing: 0) {
-            VStack(spacing: 4) {
-                if totalExpenses != nil {
-                    Text("Total expenses")
-                        .font(.headline)
+        
+        NavigationStack {
+        
+            VStack(spacing: 30) {
+                
+                VStack(spacing: 5) {
                     if totalExpenses != nil {
-                        Text(totalExpenses!.formattedCurrencyText)
-                            .font(.largeTitle)
+                        Text("Total Expenses")
+                            .font(.system(size: 30)).bold()
+                        if totalExpenses != nil {
+                            Text(totalExpenses!.formattedCurrencyText)
+                                .font(.system(size: 45)).bold()
+                        }
                     }
-                }
-            }
-            
-            if categoriesSum != nil {
-                if totalExpenses != nil && totalExpenses! > 0 {
-                    PieChartView(
-                        data: categoriesSum!.map { ($0.sum, $0.category.color) },
-                        style: Styles.pieChartStyleOne,
-                        form: CGSize(width: 300, height: 240),
-                        dropShadow: false
-                    )
                 }
                 
-                Divider()
-
-                List {
-                    Text("Breakdown").font(.headline)
-                    ForEach(self.categoriesSum!) {
-                        CategoryRowView(category: $0.category, sum: $0.sum)
+                if categoriesSum != nil {
+                    if totalExpenses != nil && totalExpenses! > 0 {
+                        PieChartView(
+                            data: categoriesSum!.map { ($0.sum, $0.category.color) },
+                            style: Styles.pieChartStyleOne,
+                            form: CGSize(width: 300, height: 240),
+                            dropShadow: false
+                        )
                     }
+                    
+                    Divider()
+                    
+                    Text("Breakdown").font(.headline)
+                        .font(.system(size: 20)).bold()
+                       
+                    
+                    VStack(spacing: 20) {
+                        
+                        ForEach(self.categoriesSum!) {
+                            CategoryRowView(category: $0.category, sum: $0.sum)
+                        }
+                        
+                        
+                    }
+                    
+                    Spacer()
                 }
-            }
-            
-            if totalExpenses == nil && categoriesSum == nil {
-                Text("No expenses data\nPlease add your expenses from the logs tab")
-                    .multilineTextAlignment(.center)
-                    .font(.headline)
-                    .padding(.horizontal)
+                
+                if totalExpenses == nil && categoriesSum == nil {
+                    Text("No expenses data\nPlease add your expenses from the logs tab")
+                        .multilineTextAlignment(.center)
+                        .font(.headline)
+                        .padding(.horizontal)
+                }
             }
         }
         .padding(.top)
